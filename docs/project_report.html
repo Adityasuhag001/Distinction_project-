@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <title>Final Project Report</title>
 <link rel="stylesheet" href="style.css">
+<style>body { font-size: 10.6pt; line-height: 1.38; }</style>
 </head>
 <body>
 
@@ -50,13 +51,13 @@
 <tr><td>50</td><td>49.3</td><td>~2,860</td><td>931 → 985</td><td>80 s</td><td>1.5 s / 43.5 s</td></tr>
 <tr><td>100</td><td>98.7</td><td>~3,000 (flat!)</td><td>1,215 → 1,307</td><td>133 s</td><td>22.4 s / 83.8 s</td></tr>
 </table>
-<figure><img src="../evidence/cloudwatch/lambda_concurrency.png" style="width:80%">
+<figure><img src="../evidence/cloudwatch/lambda_concurrency.png" style="width:70%">
 <figcaption>Figure 2: concurrent executions. Both functions scaled out by themselves (5 → 9 each), but the whole account (red) was pinned at its limit of 10 from the moment the load test started.</figcaption></figure>
 <div class="two">
 <figure><img src="../evidence/cloudwatch/lambda_invocations.png"><figcaption>Figure 3: invocations climb with each step, then flatten at ~3,000/min per function even though the rooms doubled.</figcaption></figure>
 <figure><img src="../evidence/cloudwatch/lambda_throttles.png"><figcaption>Figure 4: throttles go from 0 to over 600 a minute per function. They carry on after the test while the backlog drains.</figcaption></figure>
 </div>
-<figure><img src="../evidence/cloudwatch/lambda_async_age.png" style="width:80%">
+<figure><img src="../evidence/cloudwatch/lambda_async_age.png" style="width:70%">
 <figcaption>Figure 5: async event age = how long an IoT event sat in Lambda's queue before running. It climbs the whole test and peaks at ~295 s, 2 minutes <i>after</i> the test stopped.</figcaption></figure>
 <p><b>What this shows:</b></p>
 <ul>
@@ -94,6 +95,9 @@
 <h2>7. Conclusion</h2>
 <p>All the functional requirements from my plan work on real AWS: readings every few seconds, automatic on/off, everything saved, offline alerts, and per-device security that I actually tested. The scalability test was the most useful part, even though the result wasn't the perfect graph I was hoping for. The serverless design scaled as far as my account allowed. IoT Core took 100 msg/s from the rooms without an error, but Lambda hit the new-account limit of 10 at roughly 25–50 rooms, and my single Node-RED connection hit IoT Core's per-connection limit at 100 rooms. Past that point nothing crashed and Lambda didn't drop anything, but everything got very slow and 6% of readings were lost at the gateway. That's exactly the kind of thing you only find by load testing. If I did this again I'd request the quota increase on day one, add send jitter and stale-command checks to the devices, put a queue in front of the functions, and spread Node-RED over shared subscriptions.</p>
 
+
+<h2>8. Use of AI</h2>
+<p>I used Claude (Anthropic's AI assistant, through Claude Code) for help throughout this project. It helped with writing and debugging the code (the room simulator, both Lambda functions, the Node-RED flow, the load test and CloudWatch scripts), and with setting up the environment (installing the AWS CLI, the AWS setup scripts, device certificates, IoT/IAM policies and Node-RED). It also helped me work through the problems in section 5 and draft and structure this report. All the tests were actually run on my own AWS account, and every number, log and graph in this report comes straight from those runs (the raw files are listed in Appendix A).</p>
 
 
 <div class="appx">
