@@ -1,6 +1,6 @@
 # Smart Home Lighting - SIT314 Distinction Project
 
-Aditya Suhag (224001686)
+Aditya Suhag (224001686) - https://github.com/Adityasuhag001/Distinction_project-
 
 Rooms (simulated LDR + PIR + smart bulb in Node.js) -> AWS IoT Core (MQTT over TLS, one cert per device)
 -> Node-RED (check & clean, dead-sensor watchdog) -> IoT Rule -> 2 Lambdas (log + control) -> DynamoDB.
