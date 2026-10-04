@@ -820,9 +820,3 @@ file using your chosen key the next time you deploy a change.
     light: 'off'
   }
 }
-4 Oct 21:47:32 - [info] Stopping flows
-4 Oct 21:47:32 - [info] [mqtt-broker:AWS IoT Core] Disconnected from broker: nodered-gateway@mqtts://a25bw3rao5ztni-ats.iot.ap-southeast-2.amazonaws.com:8883
-4 Oct 21:47:32 - [info] Stopped flows
-4 Oct 21:47:32 - [info] Updated flows
-4 Oct 21:47:32 - [info] Starting flows
-4 Oct 21:47:32 - [info] Started flows

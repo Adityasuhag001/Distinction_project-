@@ -23,9 +23,11 @@ else {
   if (typeof r.ts !== 'number' || Math.abs(Date.now() - r.ts) > 60000) problems.push('timestamp missing or more than 60s off');
 }
 
-// QoS 1 can deliver the same message twice, so drop anything with a seq we've already seen
-const seen = context.get('lastSeq') || {};
-if (!problems.length && r.seq && seen[room] && r.seq <= seen[room]) problems.push('duplicate (seq ' + r.seq + ')');
+// QoS 1 can deliver the same message twice, so drop anything that isn't newer than the last one from that room.
+// (I used the seq number at first, but it resets to 1 when a device restarts, so after a reboot EVERYTHING
+//  got thrown away as a duplicate. The device timestamp doesn't have that problem.)
+const seen = context.get('lastTs') || {};
+if (!problems.length && seen[room] && r.ts <= seen[room]) problems.push('duplicate/old (ts ' + r.ts + ')');
 
 const stats = context.get('stats') || { ok: 0, bad: 0 };
 if (problems.length) {
@@ -34,7 +36,7 @@ if (problems.length) {
   return [null, { topic: room, payload: { room, problems, original: r } }];
 }
 
-seen[room] = r.seq; context.set('lastSeq', seen);
+seen[room] = r.ts; context.set('lastTs', seen);
 stats.ok++; context.set('stats', stats);
 if (stats.ok % 10 === 0) node.status({ fill: 'green', shape: 'dot', text: stats.ok + ' ok / ' + stats.bad + ' rejected' });
 
