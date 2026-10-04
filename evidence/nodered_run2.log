@@ -1,0 +1,83 @@
+4 Oct 21:50:46 - [info] 
+
+Welcome to Node-RED
+===================
+
+4 Oct 21:50:46 - [info] Node-RED version: v5.0.4
+4 Oct 21:50:46 - [info] Node.js  version: v22.17.0
+4 Oct 21:50:46 - [info] Darwin 27.0.0 arm64 LE
+4 Oct 21:50:46 - [info] Loading palette nodes
+4 Oct 21:50:46 - [info] Settings file  : /Users/adityasuhag/sit314_distinction/nodered/settings.js
+4 Oct 21:50:46 - [info] Context store  : 'default' [module=memory]
+4 Oct 21:50:46 - [info] User directory : /Users/adityasuhag/sit314_distinction/nodered
+4 Oct 21:50:46 - [warn] Projects disabled : editorTheme.projects.enabled=false
+4 Oct 21:50:46 - [info] Flows file     : /Users/adityasuhag/sit314_distinction/nodered/flows.json
+4 Oct 21:50:46 - [warn] 
+
+---------------------------------------------------------------------
+Your flow credentials file is encrypted using a system-generated key.
+
+If the system-generated key is lost for any reason, your credentials
+file will not be recoverable, you will have to delete it and re-enter
+your credentials.
+
+You should set your own key using the 'credentialSecret' option in
+your settings file. Node-RED will then re-encrypt your credentials
+file using your chosen key the next time you deploy a change.
+---------------------------------------------------------------------
+
+4 Oct 21:50:46 - [info] Server now running at http://127.0.0.1:1880/
+4 Oct 21:50:46 - [info] Starting flows
+4 Oct 21:50:46 - [info] Started flows
+4 Oct 21:50:46 - [info] [mqtt-broker:AWS IoT Core] Connected to broker: nodered-gateway@mqtts://a25bw3rao5ztni-ats.iot.ap-southeast-2.amazonaws.com:8883
+4 Oct 21:50:56 - [info] [debug:REJECTED reading] 
+{
+  room: 'lounge',
+  problems: [
+    'lux missing/out of range',
+    'motion should be true/false',
+    'timestamp missing or more than 60s off'
+  ],
+  original: { roomId: 'lounge', ts: 0, lux: -50, motion: 'yes', light: 'on' }
+}
+4 Oct 21:50:56 - [info] [debug:REJECTED reading] 
+{
+  room: 'kitchen',
+  problems: [
+    'roomId does not match topic',
+    'timestamp missing or more than 60s off'
+  ],
+  original: { roomId: 'lounge', ts: 1, lux: 100, motion: true, light: 'off' }
+}
+4 Oct 21:51:46 - [info] [debug:ALERT] 
+{
+  roomId: 'kitchen',
+  alert: 'offline',
+  lastSeen: 1791111091797,
+  at: 1791111106896,
+  message: 'no data from kitchen for 15s - sensor probably dead'
+}
+4 Oct 21:51:46 - [info] [debug:ALERT] 
+{
+  roomId: 'lounge',
+  alert: 'offline',
+  lastSeen: 1791111091797,
+  at: 1791111106903,
+  message: 'no data from lounge for 15s - sensor probably dead'
+}
+4 Oct 21:51:46 - [info] [debug:ALERT] 
+{
+  roomId: 'bedroom1',
+  alert: 'offline',
+  lastSeen: 1791111091786,
+  at: 1791111106903,
+  message: 'no data from bedroom1 for 15s - sensor probably dead'
+}
+4 Oct 21:51:46 - [info] [debug:ALERT] 
+{
+  roomId: 'bedroom2',
+  alert: 'offline',
+  lastSeen: 1791111091803,
+  at: 1791111106912,
+  message: 'no data from bedroom2 for 15s - sensor probably dead'
+}

@@ -1,0 +1,112 @@
+{
+    "Items": [
+        {
+            "expiresAt": {
+                "N": "1791715876"
+            },
+            "motionDetected": {
+                "BOOL": false
+            },
+            "rawLux": {
+                "N": "386"
+            },
+            "reportedLight": {
+                "S": "on"
+            },
+            "roomId": {
+                "S": "bedroom1"
+            },
+            "timestamp": {
+                "N": "1791111076782"
+            }
+        },
+        {
+            "expiresAt": {
+                "N": "1791715873"
+            },
+            "lightLevel": {
+                "N": "366"
+            },
+            "lightState": {
+                "S": "on"
+            },
+            "motionDetected": {
+                "BOOL": true
+            },
+            "rawLux": {
+                "N": "355"
+            },
+            "reportedLight": {
+                "S": "on"
+            },
+            "roomId": {
+                "S": "bedroom1"
+            },
+            "timestamp": {
+                "N": "1791111073780"
+            }
+        },
+        {
+            "expiresAt": {
+                "N": "1791715870"
+            },
+            "lightLevel": {
+                "N": "371"
+            },
+            "lightState": {
+                "S": "on"
+            },
+            "motionDetected": {
+                "BOOL": true
+            },
+            "rawLux": {
+                "N": "364"
+            },
+            "reportedLight": {
+                "S": "on"
+            },
+            "roomId": {
+                "S": "bedroom1"
+            },
+            "timestamp": {
+                "N": "1791111070779"
+            }
+        },
+        {
+            "expiresAt": {
+                "N": "1791715867"
+            },
+            "lightLevel": {
+                "N": "366"
+            },
+            "lightState": {
+                "S": "on"
+            },
+            "motionDetected": {
+                "BOOL": false
+            },
+            "rawLux": {
+                "N": "378"
+            },
+            "reportedLight": {
+                "S": "on"
+            },
+            "roomId": {
+                "S": "bedroom1"
+            },
+            "timestamp": {
+                "N": "1791111067778"
+            }
+        }
+    ],
+    "Count": 4,
+    "ScannedCount": 4,
+    "LastEvaluatedKey": {
+        "timestamp": {
+            "N": "1791111067778"
+        },
+        "roomId": {
+            "S": "bedroom1"
+        }
+    }
+}

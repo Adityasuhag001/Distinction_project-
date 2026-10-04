@@ -1,0 +1,10 @@
+[21:49:25] --- control: lounge cert, clientId lounge, publish to home/lounge/telemetry
+[21:49:26] connected
+[21:49:26] result: publish accepted (PUBACK received) - expected
+[21:49:26] --- test 1: lounge cert publishes to home/kitchen/telemetry
+[21:49:26] connected
+[21:49:26] result: connection closed by AWS
+[21:49:27] --- test 2: lounge cert connects as clientId "kitchen"
+[21:49:27] result: connection closed by AWS
+[21:49:27] --- test 3: no client certificate
+[21:49:27] result: error -> read ECONNRESET

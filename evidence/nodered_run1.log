@@ -826,3 +826,34 @@ file using your chosen key the next time you deploy a change.
 4 Oct 21:47:32 - [info] Updated flows
 4 Oct 21:47:32 - [info] Starting flows
 4 Oct 21:47:32 - [info] Started flows
+4 Oct 21:47:32 - [info] [mqtt-broker:AWS IoT Core] Connected to broker: nodered-gateway@mqtts://a25bw3rao5ztni-ats.iot.ap-southeast-2.amazonaws.com:8883
+4 Oct 21:48:52 - [info] [debug:ALERT] 
+{
+  roomId: 'bathroom',
+  alert: 'offline',
+  lastSeen: 1791110917730,
+  at: 1791110932888,
+  message: 'no data from bathroom for 15s - sensor probably dead'
+}
+4 Oct 21:50:18 - [info] [debug:REJECTED reading] 
+{
+  room: 'lounge',
+  problems: [
+    'lux missing/out of range',
+    'motion should be true/false',
+    'timestamp missing or more than 60s off'
+  ],
+  original: { roomId: 'lounge', ts: 0, lux: -50, motion: 'yes', light: 'on' }
+}
+4 Oct 21:50:18 - [info] [debug:REJECTED reading] 
+{
+  room: 'kitchen',
+  problems: [
+    'roomId does not match topic',
+    'timestamp missing or more than 60s off'
+  ],
+  original: { roomId: 'lounge', ts: 1, lux: 100, motion: true, light: 'off' }
+}
+4 Oct 21:50:36 - [info] Stopping flows
+4 Oct 21:50:36 - [info] [mqtt-broker:AWS IoT Core] Disconnected from broker: nodered-gateway@mqtts://a25bw3rao5ztni-ats.iot.ap-southeast-2.amazonaws.com:8883
+4 Oct 21:50:36 - [info] Stopped flows

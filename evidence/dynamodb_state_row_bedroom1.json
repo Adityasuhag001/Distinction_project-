@@ -1,0 +1,31 @@
+{
+    "Item": {
+        "lastMotionAt": {
+            "N": "1791111073780"
+        },
+        "lastRawLux": {
+            "N": "386"
+        },
+        "lastSeen": {
+            "N": "1791111076782"
+        },
+        "lightLevel": {
+            "N": "368"
+        },
+        "lightState": {
+            "S": "on"
+        },
+        "motionDetected": {
+            "BOOL": false
+        },
+        "reason": {
+            "S": "dark (avg 368 < 650 lux) + motion"
+        },
+        "roomId": {
+            "S": "bedroom1"
+        },
+        "timestamp": {
+            "N": "0"
+        }
+    }
+}

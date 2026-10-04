@@ -321,7 +321,7 @@ module.exports = {
          * telemetry without seeking further consent in the editor.
          * The user can override this setting via the user settings dialog within the editor
          */
-        // enabled: true,
+        enabled: false,
         /**
          * If telemetry is enabled, the editor will notify the user if a new version of Node-RED
          * is available. Set the following property to false to disable this notification.
@@ -424,7 +424,7 @@ module.exports = {
         /** To disable the 'Welcome to Node-RED' tour that is displayed the first
          * time you access the editor for each release of Node-RED, set this to false
          */
-        //tours: false,
+        tours: false,
 
         palette: {
             /** The following property can be used to order the categories in the editor

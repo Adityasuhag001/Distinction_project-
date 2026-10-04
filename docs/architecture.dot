@@ -1,0 +1,32 @@
+digraph G {
+  rankdir=LR; nodesep=0.25; ranksep=0.45; fontname="Helvetica"; fontsize=10;
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=9, fillcolor="#ffffff", color="#7b1020", penwidth=0.8, margin="0.08,0.04"];
+  edge [fontname="Helvetica", fontsize=7.5, color="#444444", arrowsize=0.6];
+
+  subgraph cluster_room { label="Each room (simulated in Node.js, 1 process per room)"; style="rounded,filled"; fillcolor="#fbecee"; color="#7b1020"; fontsize=9;
+    ldr [label="LDR light\nsensor"]; pir [label="PIR motion\nsensor"]; bulb [label="Smart bulb\n(on/off)"];
+    dev [label="room.js\n(acts like an ESP32)", fillcolor="#fff4d6"];
+    ldr -> dev; pir -> dev; dev -> bulb [label="switch"];
+  }
+  subgraph cluster_aws { label="AWS (ap-southeast-2)"; style="rounded,filled"; fillcolor="#eef4fb"; color="#3a6ea5"; fontsize=9;
+    iot [label="AWS IoT Core\nMQTT broker\n(cert per device + policy)", fillcolor="#fff4d6"];
+    rule [label="IoT Rule\nLightingReadings\nhome/+/clean"];
+    logfn [label="Lambda\nlighting-log-reading", fillcolor="#e6f4ea"];
+    ctl [label="Lambda\nlighting-control-light\n(avg of 3 + rule)", fillcolor="#e6f4ea"];
+    ddb [label="DynamoDB SmartLighting\n(history rows + state row ts=0)", shape=cylinder, fillcolor="#efe9fb"];
+    cw [label="CloudWatch\n(metrics + logs)", style="rounded,dashed"];
+  }
+  subgraph cluster_edge { label="My laptop (edge / gateway)"; style="rounded,filled"; fillcolor="#f3f3f3"; color="#777777"; fontsize=9;
+    nr [label="Node-RED\ncheck & clean, dedupe,\n15s dead-sensor watchdog", fillcolor="#fde7d9"];
+    dash [label="Web dashboard\n(Express)"];
+  }
+  dev -> iot [label="home/<room>/telemetry\nMQTT/TLS 8883"];
+  iot -> nr [label="subscribe\nhome/+/telemetry"];
+  nr -> iot [label="home/<room>/clean\nhome/alerts/<room>"];
+  iot -> rule; rule -> logfn; rule -> ctl;
+  logfn -> ddb; ctl -> ddb [dir=both, label="read last readings /\nwrite decision"];
+  ctl -> iot [label="publish\nhome/<room>/cmd", style=dashed, constraint=false];
+  iot -> dev [label="home/<room>/cmd", style=dashed, constraint=false];
+  ddb -> dash;
+  logfn -> cw [style=dotted, arrowhead=none]; ctl -> cw [style=dotted, arrowhead=none];
+}
