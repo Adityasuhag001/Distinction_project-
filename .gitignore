@@ -1,0 +1,9 @@
+node_modules/
+certs/
+.env
+infra/build/
+nodered/.config*
+nodered/node_modules/
+nodered/.flows*.backup
+*.zip
+.DS_Store

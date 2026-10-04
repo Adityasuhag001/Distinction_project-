@@ -1,0 +1,10 @@
+{
+  "sql": "SELECT * FROM 'home/+/clean'",
+  "awsIotSqlVersion": "2016-03-23",
+  "ruleDisabled": false,
+  "description": "cleaned readings from Node-RED -> log function + control function",
+  "actions": [
+    { "lambda": { "functionArn": "arn:aws:lambda:REGION:ACCOUNT:function:lighting-log-reading" } },
+    { "lambda": { "functionArn": "arn:aws:lambda:REGION:ACCOUNT:function:lighting-control-light" } }
+  ]
+}

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Lighting</title>
+<style>
+  body { font-family: -apple-system, Helvetica, Arial, sans-serif; background: #f4f4f6; color: #222; margin: 0; padding: 20px; }
+  h1 { margin: 0 0 4px; font-size: 22px; } .sub { color: #777; font-size: 13px; margin-bottom: 18px; }
+  .rooms { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+  .room { background: #fff; border-radius: 10px; padding: 14px; box-shadow: 0 1px 3px #0002; cursor: pointer; border: 2px solid transparent; }
+  .room.sel { border-color: #7b1020; }
+  .room h2 { margin: 0 0 8px; font-size: 16px; display: flex; justify-content: space-between; }
+  .bulb { width: 38px; height: 38px; border-radius: 50%; background: #ccc; float: right; }
+  .bulb.on { background: #ffd23f; box-shadow: 0 0 18px #ffd23f; }
+  .tag { font-size: 11px; padding: 2px 7px; border-radius: 10px; background: #d7f5dd; color: #166b2c; }
+  .tag.off { background: #fbd5d5; color: #8a1c1c; }
+  .row { font-size: 13px; margin: 3px 0; } .why { font-size: 11px; color: #777; margin-top: 6px; }
+  table { margin-top: 20px; border-collapse: collapse; background: #fff; font-size: 12px; width: 100%; }
+  td, th { padding: 4px 8px; border-bottom: 1px solid #eee; text-align: left; } th { background: #7b1020; color: #fff; }
+</style>
+</head>
+<body>
+<h1>Smart Lighting - my house</h1>
+<div class="sub">refreshes every 2s from DynamoDB · click a room for its history</div>
+<div class="rooms" id="rooms"></div>
+<table id="hist"></table>
+<script>
+let selected = 'lounge';
+const ago = ms => ms ? Math.round((Date.now() - ms) / 1000) + 's ago' : 'never';
+async function load() {
+  const rooms = await (await fetch('/api/rooms')).json();
+  document.getElementById('rooms').innerHTML = rooms.map(r => `
+    <div class="room ${r.roomId === selected ? 'sel' : ''}" onclick="selected='${r.roomId}';load()">
+      <div class="bulb ${r.lightState === 'on' ? 'on' : ''}"></div>
+      <h2>${r.roomId}</h2>
+      <span class="tag ${r.online ? '' : 'off'}">${r.online ? 'online' : 'OFFLINE'}</span>
+      <div class="row">light: <b>${r.lightState || '-'}</b></div>
+      <div class="row">avg lux: ${r.lightLevel ?? '-'} (raw ${r.lastRawLux ?? '-'})</div>
+      <div class="row">motion: ${r.motionDetected ? 'yes' : 'no'} · last ${ago(r.lastMotionAt)}</div>
+      <div class="row">last seen: ${ago(r.lastSeen)}</div>
+      <div class="why">${r.reason || ''}</div>
+    </div>`).join('');
+  const h = await (await fetch('/api/history/' + selected)).json();
+  document.getElementById('hist').innerHTML = `<tr><th colspan=6>last 20 readings - ${selected}</th></tr>
+    <tr><td><b>time</b></td><td><b>raw lux</b></td><td><b>avg lux</b></td><td><b>motion</b></td><td><b>light was</b></td><td><b>decision</b></td></tr>` +
+    h.map(x => `<tr><td>${new Date(x.timestamp).toLocaleTimeString()}</td><td>${x.rawLux ?? ''}</td><td>${x.lightLevel ?? ''}</td>
+      <td>${x.motionDetected ? 'yes' : ''}</td><td>${x.reportedLight ?? ''}</td><td>${x.lightState ?? ''}</td></tr>`).join('');
+}
+load(); setInterval(load, 2000);
+</script>
+</body>
+</html>
