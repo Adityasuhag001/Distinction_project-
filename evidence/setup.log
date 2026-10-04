@@ -1,0 +1,16 @@
+account 789633759313, region ap-southeast-2, endpoint a25bw3rao5ztni-ats.iot.ap-southeast-2.amazonaws.com
+== 1. DynamoDB table
+== 2. IAM roles (one each, only what that function needs)
+   waiting for IAM to catch up...
+== 3. Lambda functions
+   lighting-log-reading deployed
+   lighting-control-light deployed
+== 4. IoT Core policies, things and certificates
+  lounge -> cert ba6348a9c1a08f929b6b62a05c6f592372a353f10ff1ed1930b5fba30d33f54b
+  kitchen -> cert 7d73e906d87f93b6160d829e10a715224dd03b583d787fd311c737e626a3fb69
+  bedroom1 -> cert 1d0891202a04be0ec4598e4264ae84338304d94dea13a70877d571b74c2b3d60
+  bedroom2 -> cert 1e2d7b38b3257c0599085d3ceedafc48d55064ca12453951995d9943ac58f031
+  bathroom -> cert 7b4c7e4e86b2d2ee5deab38593529968903674a716e79febfdeea29bbb42a825
+  nodered-gateway -> cert c1717d9f0eaf2d9084695ee2a1cdccfcedf47aebd8b8720b50240f9c9cec3a5a
+== 5. IoT rule -> both Lambdas
+done :)

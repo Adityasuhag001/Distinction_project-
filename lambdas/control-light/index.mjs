@@ -9,6 +9,9 @@ const iot = new IoTDataPlaneClient({ endpoint: `https://${process.env.IOT_ENDPOI
 const TABLE = process.env.TABLE_NAME;
 
 const DARK = 250;            // lux - below this the room counts as dark
+const BRIGHT = 650;          // lux - once the light is ON it has to be brighter than this before it turns off for brightness.
+                             // the bulb itself adds ~350 lux to what the sensor sees, so without this gap the light
+                             // turned itself off straight away and flickered every few seconds (found this on my first test run)
 const OFF_DELAY_MS = 30000;  // wait 30s after the last motion before switching off
 
 export const handler = async (r) => {
@@ -30,8 +33,11 @@ export const handler = async (r) => {
   const motionRecent = r.ts - lastMotionAt < OFF_DELAY_MS;
 
   // the actual rule: someone's been here recently AND it's dark -> on, otherwise off
-  const decision = motionRecent && avgLux < DARK ? 'on' : 'off';
-  const reason = !motionRecent ? 'no motion for 30s' : avgLux < DARK ? `dark (avg ${avgLux} lux) + motion` : `bright enough (avg ${avgLux} lux)`;
+  // (with two thresholds so the light doesn't count its own glow as daylight)
+  const threshold = r.light === 'on' ? BRIGHT : DARK;
+  const isDark = avgLux < threshold;
+  const decision = motionRecent && isDark ? 'on' : 'off';
+  const reason = !motionRecent ? 'no motion for 30s' : isDark ? `dark (avg ${avgLux} < ${threshold} lux) + motion` : `bright enough (avg ${avgLux} > ${threshold} lux)`;
 
   // only send a command if the light isn't already in the right state
   if (decision !== r.light) {

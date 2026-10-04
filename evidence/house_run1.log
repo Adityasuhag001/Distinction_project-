@@ -1,0 +1,187 @@
+started 5 rooms: lounge, kitchen, bedroom1, bedroom2, bathroom
+[21:45:32] bedroom1  connected to IoT Core
+[21:45:33] lounge    connected to IoT Core
+[21:45:33] bathroom  connected to IoT Core
+[21:45:33] kitchen   connected to IoT Core
+[21:45:33] bedroom2  connected to IoT Core
+[21:45:35] bedroom1  lux=  39 motion=Y light=off
+[21:45:35] bedroom2  lux=  46 motion=Y light=off
+[21:45:35] lounge    lux=  43 motion=Y light=off
+[21:45:35] bathroom  lux=  29 motion=- light=off
+[21:45:35] kitchen   lux=   0 motion=- light=off
+[21:45:36] bedroom2  >>> light switched ON (dark (avg 46 lux) + motion) latency=1726ms
+[21:45:36] lounge    >>> light switched ON (dark (avg 43 lux) + motion) latency=1780ms
+[21:45:37] bedroom1  >>> light switched ON (dark (avg 39 lux) + motion) latency=1811ms
+[21:45:38] bedroom2  lux= 375 motion=- light=on
+[21:45:38] bedroom1  lux= 351 motion=- light=on
+[21:45:38] bathroom  lux=  30 motion=- light=off
+[21:45:38] kitchen   lux=  42 motion=Y light=off
+[21:45:38] lounge    lux= 344 motion=- light=on
+[21:45:38] kitchen   >>> light switched ON (dark (avg 21 lux) + motion) latency=306ms
+[21:45:41] bedroom2  lux= 369 motion=- light=on
+[21:45:41] bedroom1  lux= 359 motion=Y light=on
+[21:45:41] kitchen   lux= 387 motion=- light=on
+[21:45:41] bathroom  lux=  38 motion=- light=off
+[21:45:41] lounge    lux= 358 motion=Y light=on
+[21:45:41] bedroom2  >>> light switched OFF (bright enough (avg 263 lux)) latency=695ms
+[21:45:42] bedroom1  >>> light switched OFF (bright enough (avg 250 lux)) latency=995ms
+[21:45:44] bedroom1  lux=   2 motion=- light=off
+[21:45:44] bedroom2  lux=  39 motion=Y light=off
+[21:45:44] lounge    lux= 365 motion=Y light=on
+[21:45:44] kitchen   lux= 341 motion=- light=on
+[21:45:44] bathroom  lux=  49 motion=Y light=off
+[21:45:44] lounge    >>> light switched OFF (bright enough (avg 356 lux)) latency=346ms
+[21:45:44] bedroom1  >>> light switched ON (dark (avg 237 lux) + motion) latency=369ms
+[21:45:44] kitchen   >>> light switched OFF (bright enough (avg 257 lux)) latency=461ms
+[21:45:44] bathroom  >>> light switched ON (dark (avg 39 lux) + motion) latency=673ms
+[21:45:47] bedroom1  lux= 360 motion=- light=on
+[21:45:47] bedroom2  lux=  23 motion=Y light=off
+[21:45:47] bathroom  lux= 387 motion=Y light=on
+[21:45:47] lounge    lux=   0 motion=Y light=off
+[21:45:47] kitchen   lux=  12 motion=Y light=off
+[21:45:47] lounge    >>> light switched ON (dark (avg 241 lux) + motion) latency=499ms
+[21:45:47] kitchen   >>> light switched ON (dark (avg 247 lux) + motion) latency=510ms
+[21:45:47] bedroom2  >>> light switched ON (dark (avg 144 lux) + motion) latency=533ms
+[21:45:50] bedroom2  lux= 376 motion=- light=on
+[21:45:50] bedroom1  lux= 392 motion=- light=on
+[21:45:50] bathroom  lux= 346 motion=- light=on
+[21:45:50] kitchen   lux= 347 motion=- light=on
+[21:45:50] lounge    lux= 359 motion=- light=on
+[21:45:50] bedroom1  >>> light switched OFF (bright enough (avg 251 lux)) latency=442ms
+[21:45:50] bathroom  >>> light switched OFF (bright enough (avg 261 lux)) latency=511ms
+[21:45:53] bedroom2  lux= 382 motion=Y light=on
+[21:45:53] bedroom1  lux=  12 motion=- light=off
+[21:45:53] kitchen   lux= 382 motion=- light=on
+[21:45:53] bathroom  lux=  28 motion=Y light=off
+[21:45:53] lounge    lux= 347 motion=Y light=on
+[21:45:53] bedroom2  >>> light switched OFF (bright enough (avg 260 lux)) latency=346ms
+[21:45:56] bedroom2  lux=  26 motion=Y light=off
+[21:45:56] bedroom1  lux=   0 motion=- light=off
+[21:45:56] bathroom  lux=  30 motion=- light=off
+[21:45:56] lounge    lux= 388 motion=- light=on
+[21:45:56] kitchen   lux= 361 motion=- light=on
+[21:45:56] kitchen   >>> light switched OFF (bright enough (avg 363 lux)) latency=270ms
+[21:45:56] bathroom  >>> light switched ON (dark (avg 135 lux) + motion) latency=296ms
+[21:45:56] bedroom1  >>> light switched ON (dark (avg 135 lux) + motion) latency=307ms
+[21:45:56] lounge    >>> light switched OFF (bright enough (avg 365 lux)) latency=506ms
+[21:45:59] bedroom2  lux=   1 motion=- light=off
+[21:45:59] bedroom1  lux= 370 motion=- light=on
+[21:45:59] kitchen   lux=   0 motion=- light=off
+[21:45:59] bathroom  lux= 368 motion=Y light=on
+[21:45:59] lounge    lux=   9 motion=Y light=off
+[21:45:59] bedroom2  >>> light switched ON (dark (avg 136 lux) + motion) latency=395ms
+[21:45:59] kitchen   >>> light switched ON (dark (avg 248 lux) + motion) latency=392ms
+[21:45:59] lounge    >>> light switched ON (dark (avg 248 lux) + motion) latency=404ms
+[21:46:02] bedroom2  lux= 393 motion=Y light=on
+[21:46:02] bedroom1  lux= 353 motion=- light=on
+[21:46:02] kitchen   lux= 389 motion=- light=on
+[21:46:02] bathroom  lux= 345 motion=Y light=on
+[21:46:02] lounge    lux= 391 motion=Y light=on
+[21:46:02] kitchen   >>> light switched OFF (bright enough (avg 250 lux)) latency=384ms
+[21:46:02] lounge    >>> light switched OFF (bright enough (avg 263 lux)) latency=395ms
+[21:46:05] bedroom2  lux= 345 motion=- light=on
+[21:46:05] bedroom1  lux= 354 motion=- light=on
+[21:46:05] kitchen   lux=  46 motion=- light=off
+[21:46:05] lounge    lux=  48 motion=- light=off
+[21:46:05] bathroom  lux= 347 motion=- light=on
+[21:46:05] lounge    >>> light switched ON (dark (avg 149 lux) + motion) latency=322ms
+[21:46:05] kitchen   >>> light switched ON (dark (avg 145 lux) + motion) latency=331ms
+[21:46:05] bedroom1  >>> light switched OFF (bright enough (avg 359 lux)) latency=425ms
+[21:46:05] bathroom  >>> light switched OFF (bright enough (avg 353 lux)) latency=447ms
+[21:46:08] bedroom2  lux= 350 motion=Y light=on
+[21:46:08] bedroom1  lux=  17 motion=- light=off
+[21:46:08] kitchen   lux= 376 motion=- light=on
+[21:46:08] lounge    lux= 377 motion=Y light=on
+[21:46:08] bathroom  lux=  26 motion=- light=off
+[21:46:08] bedroom2  >>> light switched OFF (bright enough (avg 363 lux)) latency=257ms
+[21:46:08] bedroom1  >>> light switched ON (dark (avg 241 lux) + motion) latency=316ms
+[21:46:08] kitchen   >>> light switched OFF (bright enough (avg 270 lux)) latency=323ms
+[21:46:08] bathroom  >>> light switched ON (dark (avg 239 lux) + motion) latency=381ms
+[21:46:08] lounge    >>> light switched OFF (bright enough (avg 272 lux)) latency=506ms
+[21:46:11] bedroom2  lux=   0 motion=- light=off
+[21:46:11] bedroom1  lux= 359 motion=- light=on
+[21:46:11] lounge    lux=   0 motion=Y light=off
+[21:46:11] kitchen   lux=  31 motion=- light=off
+[21:46:11] bathroom  lux= 360 motion=- light=on
+[21:46:11] kitchen   >>> light switched ON (dark (avg 151 lux) + motion) latency=253ms
+[21:46:11] lounge    >>> light switched ON (dark (avg 142 lux) + motion) latency=258ms
+[21:46:11] bedroom1  >>> light switched OFF (no motion for 30s) latency=379ms
+[21:46:11] bedroom2  >>> light switched ON (dark (avg 232 lux) + motion) latency=420ms
+[21:46:14] bedroom2  lux= 366 motion=- light=on
+[21:46:14] bedroom1  lux=  39 motion=- light=off
+[21:46:14] kitchen   lux= 347 motion=- light=on
+[21:46:14] lounge    lux= 378 motion=- light=on
+[21:46:14] bathroom  lux= 354 motion=- light=on
+[21:46:14] lounge    >>> light switched OFF (bright enough (avg 252 lux)) latency=505ms
+[21:46:14] kitchen   >>> light switched OFF (bright enough (avg 251 lux)) latency=570ms
+[21:46:17] bedroom2  lux= 344 motion=Y light=on
+[21:46:17] bedroom1  lux=  40 motion=- light=off
+[21:46:17] kitchen   lux=  13 motion=- light=off
+[21:46:17] lounge    lux=   0 motion=- light=off
+[21:46:17] bathroom  lux= 391 motion=- light=on
+[21:46:17] lounge    >>> light switched ON (dark (avg 126 lux) + motion) latency=274ms
+[21:46:17] bathroom  >>> light switched OFF (bright enough (avg 368 lux)) latency=327ms
+[21:46:20] bedroom2  lux= 378 motion=Y light=on
+[21:46:20] bedroom1  lux=  42 motion=Y light=off
+[21:46:20] lounge    lux= 384 motion=- light=on
+[21:46:20] kitchen   lux=  44 motion=- light=off
+[21:46:20] bathroom  lux=  36 motion=- light=off
+[21:46:20] bedroom2  >>> light switched OFF (bright enough (avg 363 lux)) latency=275ms
+[21:46:20] bedroom1  >>> light switched ON (dark (avg 40 lux) + motion) latency=283ms
+[21:46:20] lounge    >>> light switched OFF (bright enough (avg 254 lux)) latency=295ms
+[21:46:23] bedroom2  lux=  37 motion=- light=off
+[21:46:23] bedroom1  lux= 343 motion=- light=on
+[21:46:23] kitchen   lux=  24 motion=- light=off
+[21:46:23] lounge    lux=  24 motion=- light=off
+[21:46:23] bathroom  lux=  49 motion=- light=off
+[21:46:23] bathroom  >>> light switched ON (dark (avg 159 lux) + motion) latency=331ms
+[21:46:23] lounge    >>> light switched ON (dark (avg 136 lux) + motion) latency=459ms
+[21:46:26] bedroom2  lux=  30 motion=- light=off
+[21:46:26] bedroom1  lux= 371 motion=Y light=on
+[21:46:26] lounge    lux= 376 motion=- light=on
+[21:46:26] kitchen   lux=  11 motion=- light=off
+[21:46:26] bathroom  lux= 365 motion=- light=on
+[21:46:26] lounge    >>> light switched OFF (bright enough (avg 261 lux)) latency=403ms
+[21:46:26] bedroom1  >>> light switched OFF (bright enough (avg 252 lux)) latency=438ms
+[21:46:26] bedroom2  >>> light switched ON (dark (avg 148 lux) + motion) latency=571ms
+[21:46:29] bedroom2  lux= 344 motion=Y light=on
+[21:46:29] bedroom1  lux=   0 motion=- light=off
+[21:46:29] lounge    lux=   0 motion=- light=off
+[21:46:29] kitchen   lux=  15 motion=- light=off
+[21:46:29] bathroom  lux= 341 motion=- light=on
+[21:46:29] lounge    >>> light switched ON (dark (avg 133 lux) + motion) latency=278ms
+[21:46:29] bathroom  >>> light switched OFF (bright enough (avg 252 lux)) latency=274ms
+[21:46:29] bedroom1  >>> light switched ON (dark (avg 238 lux) + motion) latency=351ms
+[21:46:32] bedroom2  lux= 378 motion=Y light=on
+[21:46:32] bedroom1  lux= 358 motion=Y light=on
+[21:46:32] lounge    lux= 395 motion=- light=on
+[21:46:32] kitchen   lux=   0 motion=- light=off
+[21:46:32] bathroom  lux=   0 motion=- light=off
+[21:46:32] lounge    >>> light switched OFF (bright enough (avg 257 lux)) latency=552ms
+[21:46:32] bedroom2  >>> light switched OFF (bright enough (avg 251 lux)) latency=561ms
+[21:46:35] bedroom1  lux= 364 motion=Y light=on
+[21:46:35] bedroom2  lux=  39 motion=- light=off
+[21:46:35] lounge    lux=  15 motion=- light=off
+[21:46:35] kitchen   lux=  40 motion=- light=off
+[21:46:35] bathroom  lux=   0 motion=- light=off
+[21:46:35] lounge    >>> light switched ON (dark (avg 137 lux) + motion) latency=564ms
+[21:46:38] bedroom2  lux=  26 motion=- light=off
+[21:46:38] bedroom1  lux= 354 motion=- light=on
+[21:46:38] kitchen   lux=  21 motion=- light=off
+[21:46:38] lounge    lux= 377 motion=- light=on
+[21:46:38] bathroom  lux=  39 motion=- light=off
+[21:46:38] bedroom2  >>> light switched ON (dark (avg 148 lux) + motion) latency=291ms
+[21:46:38] lounge    >>> light switched OFF (bright enough (avg 262 lux)) latency=299ms
+[21:46:38] bedroom1  >>> light switched OFF (bright enough (avg 359 lux)) latency=339ms
+[21:46:41] bedroom1  lux=  10 motion=- light=off
+[21:46:41] bedroom2  lux= 387 motion=Y light=on
+[21:46:41] kitchen   lux=   2 motion=- light=off
+[21:46:41] lounge    lux=  20 motion=- light=off
+[21:46:41] bathroom  lux=   7 motion=- light=off
+[21:46:41] bedroom1  >>> light switched ON (dark (avg 243 lux) + motion) latency=338ms
+[21:46:44] bedroom1  lux= 379 motion=- light=on
+[21:46:44] bedroom2  lux= 386 motion=Y light=on
+[21:46:44] kitchen   lux=  37 motion=- light=off
+[21:46:44] lounge    lux=  49 motion=- light=off
+[21:46:44] bathroom  lux=   0 motion=- light=off
+[21:46:44] bedroom2  >>> light switched OFF (bright enough (avg 266 lux)) latency=288ms
