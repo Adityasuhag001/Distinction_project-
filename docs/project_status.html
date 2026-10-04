@@ -95,7 +95,7 @@ Node-RED, 12 seconds later:
 <p>Both functions get triggered by the same message, so they run in parallel. If I'd used <code>PutItem</code> in the log function, it could wipe out the decision the control function had just written to the same row (or the other way round). I'm using <code>UpdateItem</code> in both so they only touch their own fields. Also, the control function can't assume the current reading is in the table yet. So it averages the reading it was given plus the previous 2 from DynamoDB.</p>
 
 <h3>4.4 New AWS accounts can only run 10 Lambdas at once</h3>
-<p>While setting up I checked the account settings and the concurrency limit is <b>10</b>, not the 1000 you usually read about. Apparently new accounts start low. That's shared between both functions, so it's a real risk for the load test. Right now each invocation only takes ~30–70 ms (from the CloudWatch REPORT lines), so 10 might actually be enough. I'll find out when I run it. If it's not enough, IoT Core retries throttled Lambda calls, so things should get delayed rather than lost. That's something I want to show properly in the final report.</p>
+<p>While setting up I checked the account settings and the concurrency limit is <b>10</b>, not the 1000 you usually read about. Apparently new accounts start low. That's shared between both functions, so it's a real risk for the load test. Right now each invocation only takes ~30–70 ms (from the CloudWatch REPORT lines), so 10 might actually be enough. I'll find out when I run it. If it's not enough, IoT Core calls Lambda asynchronously and Lambda retries throttled events itself, so things should get delayed rather than lost. That's something I want to show properly in the final report.</p>
 
 <h2>5. Security So Far</h2>
 <p>Every room (and Node-RED) has its own certificate. The IoT policy uses the thing name as a variable, so a device can only connect with its own client ID and only publish to its own <code>telemetry</code> topic and subscribe to its own <code>cmd</code> topic. Each Lambda has its own IAM role with just what it needs. The log function can only <code>UpdateItem</code> on the one table. The control function can only Query/Get/Update that table and publish to <code>home/*/cmd</code>. I wrote a little test script to check the policy actually does something:</p>
@@ -103,7 +103,7 @@ Node-RED, 12 seconds later:
 <tr><th>Test (using the lounge's certificate)</th><th>Result</th></tr>
 <tr><td>Publish to its own topic <code>home/lounge/telemetry</code></td><td class="ok">Accepted (control test)</td></tr>
 <tr><td>Publish to <code>home/kitchen/telemetry</code> (pretending to be the kitchen)</td><td class="ok">AWS closed the connection</td></tr>
-<tr><td>Connect with client ID "kitchen"</td><td class="ok">Connection refused/closed</td></tr>
+<tr><td>Connect with client ID "kitchen"</td><td class="ok">AWS closed the connection</td></tr>
 <tr><td>Connect with no client certificate at all</td><td class="ok">TLS handshake reset</td></tr>
 </table>
 

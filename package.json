@@ -1,17 +1,19 @@
 {
   "name": "sit314_distinction",
   "version": "1.0.0",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
+  "description": "SIT314 distinction project - smart home lighting on AWS IoT Core + Lambda + DynamoDB",
+  "author": "Aditya Suhag (224001686)",
   "license": "ISC",
-  "description": "",
+  "scripts": {
+    "setup": "bash infra/setup.sh",
+    "rooms": "node simulator/house.js",
+    "nodered": "node nodered/buildflow.js && node-red --userDir nodered flows.json",
+    "dashboard": "node dashboard/server.js",
+    "loadtest": "node loadtest/loadtest.js --steps=25,50,100 --step-secs=120 --every=1000 --workers=4",
+    "security-test": "node simulator/security-test.js",
+    "report": "node docs/build_report.js",
+    "teardown": "bash infra/teardown.sh"
+  },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1146.0",
     "@aws-sdk/lib-dynamodb": "^3.1146.0",
