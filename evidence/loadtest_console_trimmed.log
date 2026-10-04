@@ -1,0 +1,57 @@
+load test: steps 25 -> 50 -> 100 rooms, 120s each, every room sends every 1000ms, 4 worker processes
+started 2026-10-04T10:59:55.078Z
+  t=10s  step 1/3  (25 rooms)
+   ... (first few of the thousands of light switch lines) ...
+[21:59:56] load-002  >>> light switched ON (dark (avg 35 < 250 lux) + motion) latency=316ms
+[21:59:57] load-004  >>> light switched ON (dark (avg 0 < 250 lux) + motion) latency=341ms
+[21:59:57] load-005  >>> light switched ON (dark (avg 1 < 250 lux) + motion) latency=242ms
+[21:59:57] load-001  >>> light switched ON (dark (avg 24 < 250 lux) + motion) latency=313ms
+[21:59:57] load-003  >>> light switched ON (dark (avg 21 < 250 lux) + motion) latency=297ms
+[21:59:58] load-009  >>> light switched ON (dark (avg 0 < 250 lux) + motion) latency=345ms
+   ...
+  t=20s  step 1/3  (25 rooms)
+  t=30s  step 1/3  (25 rooms)
+  t=40s  step 1/3  (25 rooms)
+  t=50s  step 1/3  (25 rooms)
+  t=60s  step 1/3  (25 rooms)
+  t=70s  step 1/3  (25 rooms)
+  t=80s  step 1/3  (25 rooms)
+  t=90s  step 1/3  (25 rooms)
+  t=100s  step 1/3  (25 rooms)
+  t=110s  step 1/3  (25 rooms)
+  t=120s  step 2/3  (50 rooms)
+  t=130s  step 2/3  (50 rooms)
+  t=140s  step 2/3  (50 rooms)
+  t=150s  step 2/3  (50 rooms)
+  t=160s  step 2/3  (50 rooms)
+  t=170s  step 2/3  (50 rooms)
+  t=180s  step 2/3  (50 rooms)
+  t=190s  step 2/3  (50 rooms)
+  t=200s  step 2/3  (50 rooms)
+  t=210s  step 2/3  (50 rooms)
+  t=220s  step 2/3  (50 rooms)
+  t=230s  step 2/3  (50 rooms)
+  t=240s  step 3/3  (100 rooms)
+  t=250s  step 3/3  (100 rooms)
+  t=260s  step 3/3  (100 rooms)
+  t=270s  step 3/3  (100 rooms)
+  t=280s  step 3/3  (100 rooms)
+  t=290s  step 3/3  (100 rooms)
+  t=300s  step 3/3  (100 rooms)
+  t=310s  step 3/3  (100 rooms)
+  t=320s  step 3/3  (100 rooms)
+  t=330s  step 3/3  (100 rooms)
+  t=340s  step 3/3  (100 rooms)
+  t=350s  step 3/3  (100 rooms)
+  t=360s  step 3/3  (100 rooms)
+
+=== results ===
+┌─────────┬───────┬───────────┬───────┬───────────┬────────┬────────┬────────┬────────┐
+│ (index) │ rooms │ msgs sent │ msg/s │ cmds back │ p50 ms │ p95 ms │ p99 ms │ max ms │
+├─────────┼───────┼───────────┼───────┼───────────┼────────┼────────┼────────┼────────┤
+│ 0       │ 25    │ 2925      │ 24.4  │ 46        │ 314    │ 813    │ 1449   │ 1449   │
+│ 1       │ 50    │ 5920      │ 49.3  │ 353       │ 1462   │ 43511  │ 60744  │ 65824  │
+│ 2       │ 100   │ 11842     │ 98.7  │ 1333      │ 22411  │ 83839  │ 103100 │ 120284 │
+└─────────┴───────┴───────────┴───────┴───────────┴────────┴────────┴────────┴────────┘
+total sent 20687, commands received 1732, mqtt errors 0
+saved /Users/adityasuhag/sit314_distinction/loadtest/../evidence/loadtest_2026-10-04T1059.json

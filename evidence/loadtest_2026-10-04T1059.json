@@ -1,0 +1,53 @@
+{
+  "startedAt": "2026-10-04T10:59:55.078Z",
+  "endedAt": "2026-10-04T11:05:55.207Z",
+  "steps": [
+    25,
+    50,
+    100
+  ],
+  "stepSecs": 120,
+  "everyMs": 1000,
+  "workers": 4,
+  "perStep": [
+    {
+      "rooms": 25,
+      "messagesSent": 2925,
+      "msgPerSec": 24.4,
+      "commandsReceived": 46,
+      "latencyMs": {
+        "p50": 314,
+        "p95": 813,
+        "p99": 1449,
+        "max": 1449
+      }
+    },
+    {
+      "rooms": 50,
+      "messagesSent": 5920,
+      "msgPerSec": 49.3,
+      "commandsReceived": 353,
+      "latencyMs": {
+        "p50": 1462,
+        "p95": 43511,
+        "p99": 60744,
+        "max": 65824
+      }
+    },
+    {
+      "rooms": 100,
+      "messagesSent": 11842,
+      "msgPerSec": 98.7,
+      "commandsReceived": 1333,
+      "latencyMs": {
+        "p50": 22411,
+        "p95": 83839,
+        "p99": 103100,
+        "max": 120284
+      }
+    }
+  ],
+  "totalSent": 20687,
+  "totalCommands": 1732,
+  "connectErrors": 0
+}

@@ -1,0 +1,16 @@
+<p>All of these are in the <code>evidence/</code> folder of the repo. Logs are the real terminal output from the runs (I just saved them with <code>tee</code>).</p>
+<table>
+<tr><th style="width:36%">File</th><th>What it shows</th></tr>
+<tr><td><code>setup.log</code></td><td><code>infra/setup.sh</code> creating everything on a brand new AWS account</td></tr>
+<tr><td><code>bug_flicker_run1.log</code></td><td>first full run with the plan's single-threshold rule – 61 light switches in ~90s (the flicker bug)</td></tr>
+<tr><td><code>house_run2.log</code></td><td>run after the hysteresis fix, with the bathroom sensor "dying" after 60s</td></tr>
+<tr><td><code>nodered_run1.log</code>, <code>nodered_run2.log</code></td><td>Node-RED output: offline/back-online alerts, rejected readings (incl. the duplicate-seq bug)</td></tr>
+<tr><td><code>security_test.log</code></td><td>lounge's cert trying to publish as / connect as the kitchen, and connecting with no cert</td></tr>
+<tr><td><code>dynamodb_sample_bedroom1.json</code>, <code>dynamodb_state_row_bedroom1.json</code></td><td>real rows from the table (history rows + the timestamp-0 state row)</td></tr>
+<tr><td><code>lambda_control_logs_sample.txt</code></td><td>CloudWatch REPORT lines for the control function (duration, memory)</td></tr>
+<tr><td><code>loadtest_*.json</code>, <code>loadtest_console.log</code></td><td>load test results per step (messages, commands, latency percentiles)</td></tr>
+<tr><td><code>house_during_loadtest.log</code></td><td>the 5 normal rooms, which kept running the whole time the load test was on</td></tr>
+<tr><td><code>cloudwatch/*.png</code></td><td>graphs pulled straight from CloudWatch with <code>get-metric-widget-image</code></td></tr>
+<tr><td><code>cloudwatch/per_minute.json</code>, <code>metric_data.json</code></td><td>the raw per-minute CloudWatch numbers behind the graphs</td></tr>
+<tr><td><code>nodered_flow.png</code>, <code>dashboard.png</code></td><td>screenshots of the Node-RED editor and the dashboard</td></tr>
+</table>

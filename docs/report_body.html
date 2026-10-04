@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Final Project Report</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Distinction Project – Final Report</h1>
+<p class="sub">Smart Home Lighting System</p>
+<p class="meta">Aditya Suhag (224001686) &nbsp;|&nbsp; IoT Systems – Distinction Task 3 of 3 &nbsp;|&nbsp; 4 October 2026</p>
+
+<h2>1. What I Ended Up With</h2>
+<p>I built the smart lighting system from my plan and ran it on real AWS. Each room has a light sensor (LDR), a motion sensor (PIR) and a smart bulb, all simulated in Node.js. Each room connects to AWS IoT Core over MQTT with TLS using its own certificate. Node-RED checks and cleans every reading. An IoT Rule triggers two Lambda functions: one logs the reading and the other decides whether the light should be on. The decision goes back down to the room and the bulb actually switches. Everything ends up in one DynamoDB table, and there's a small dashboard on top.</p>
+<p>To show it scales, I ramped an extra 25 → 50 → 100 rooms on top of the 5 "real" ones, each sending a reading every second. I measured it from both ends: how long rooms waited for their on/off commands, and what CloudWatch says AWS was doing. Quick scorecard against the requirements in my plan:</p>
+<table>
+<tr><th style="width:30%">Requirement (from my plan)</th><th style="width:9%">Met?</th><th>What actually happened</th></tr>
+<tr><td>Each room sends light + motion every few seconds</td><td class="ok">Yes</td><td>Every 3 s from 5 rooms (load rooms every 1 s)</td></tr>
+<tr><td>Works out on/off, and that changes the light</td><td class="ok">Yes</td><td>Control Lambda → MQTT command → bulb switches. Median ~400 ms end to end at normal load</td></tr>
+<tr><td>Readings + decisions saved</td><td class="ok">Yes</td><td>DynamoDB history rows + a current-state row per room</td></tr>
+<tr><td>Alert if a room stops sending</td><td class="ok">Yes</td><td>Node-RED watchdog alerted 12 s after the bathroom sensor "died"</td></tr>
+<tr><td>Scalable: 5 → ~100 rooms, no design change</td><td class="wip">Partly</td><td>The same design ran 105 rooms with zero code changes and nothing crashed. But the account's 10-Lambda limit made it slow past ~25–50 rooms, and 6% of load readings were dropped at Node-RED (section 3)</td></tr>
+<tr><td>Fast: reacts within a couple of seconds</td><td class="wip">Up to ~25 rooms</td><td>25 rooms: p50 314 ms / p95 813 ms. 100 rooms: p50 22 s</td></tr>
+<tr><td>Secure: only real devices, encrypted</td><td class="ok">Yes</td><td>Cert per device, policy scoped per room (tested), least-privilege IAM, TLS</td></tr>
+<tr><td>Doesn't fall over easily</td><td class="wip">Mostly</td><td>Under overload nothing crashed and Lambda dropped 0 events (just delayed them). Node-RED is a single point of failure though</td></tr>
+</table>
+
+<h2>2. How It Works</h2>
+<figure style="margin-top:2pt">
+<img src="architecture.png" style="width:93%">
+<figcaption>Figure 1: the final architecture. Solid arrows = readings going up, dashed = on/off commands coming back down.</figcaption>
+</figure>
+<p><b>The flow:</b> a room publishes <code>{lux, motion, light, ts}</code> to <code>home/&lt;room&gt;/telemetry</code> every 3 seconds. Node-RED (on my laptop, acting as the edge/gateway) subscribes to <code>home/+/telemetry</code>. It throws out anything broken (wrong types, lux out of range, room ID not matching the topic, timestamps more than 60s off, duplicates) and republishes the clean reading to <code>home/&lt;room&gt;/clean</code>. It also runs a per-room watchdog that raises an alert on <code>home/alerts/&lt;room&gt;</code> if a room goes quiet for 15 seconds. The IoT Rule <code>SELECT * FROM 'home/+/clean'</code> sends each clean reading to both Lambdas at the same time.</p>
+<p><b>The decision logic</b> (control function) is still just rules, no ML:</p>
+<ul>
+<li><b>Smoothing:</b> average this reading with the previous 2 for that room.</li>
+<li><b>Motion + off delay:</b> the time of the last motion is stored, so the light stays on until there's been 30s with no motion.</li>
+<li><b>Two thresholds (this wasn't in my plan):</b> the light turns on below 250 lux. But once it's on, it only turns off for brightness above 650 lux. The plan's single threshold made every light flicker, because the bulb's own light (~350 lux) made the room look "bright enough" (section 5).</li>
+<li>A command only gets published if the decision is different from what the room says its light is doing, so there are no pointless messages.</li>
+</ul>
+<p><b>Data:</b> one DynamoDB table <code>SmartLighting</code> (on-demand billing). Partition key is <code>roomId</code>, sort key is <code>timestamp</code>. Every reading is a row (raw lux, motion, smoothed lux, decision). Each room also has a special row with <code>timestamp = 0</code> holding its current state (light, lastSeen, lastMotionAt). Reading that one row is much cheaper than querying history. History rows expire after 7 days using TTL. Both functions use <code>UpdateItem</code> rather than <code>PutItem</code> because they write to the same row at the same time.</p>
+
+<h2>3. Scalability – The Load Test</h2>
+<p><b>How I tested it:</b> I made 100 extra rooms (<code>load-001</code> to <code>load-100</code>). Each one is a proper IoT thing with its own certificate, so they go through exactly the same path as a real room. <code>loadtest.js</code> runs them across 4 worker processes and ramps 25 → 50 → 100 rooms, 2 minutes per step. Each load room sends every <b>1 second</b>, which is 3× faster than my normal rooms, so 100 load rooms is about the same traffic as 300 normal ones. The 5 normal rooms kept running the whole time, plus a few minutes before and after as a baseline and cool-down. I measured two things. Each room timed how long it took from sending a reading to getting its on/off command back. I also pulled the CloudWatch metrics and graphs straight from AWS with <code>get-metric-widget-image</code>.</p>
+<table>
+<tr><th>Load rooms</th><th>Readings/s sent</th><th>Lambda invocations / min (each fn)</th><th>Throttles / min (both fns)</th><th>Longest wait in queue</th><th>Command latency p50 / p95</th></tr>
+<tr><td>0 (baseline, 5 rooms)</td><td>1.7</td><td>70–144</td><td>0</td><td>0.1 s</td><td>~0.3–1 s</td></tr>
+<tr><td>25</td><td>24.4</td><td>~1,600</td><td>82 → 243</td><td>3.4 s</td><td>314 ms / 813 ms</td></tr>
+<tr><td>50</td><td>49.3</td><td>~2,860</td><td>931 → 985</td><td>80 s</td><td>1.5 s / 43.5 s</td></tr>
+<tr><td>100</td><td>98.7</td><td>~3,000 (flat!)</td><td>1,215 → 1,307</td><td>133 s</td><td>22.4 s / 83.8 s</td></tr>
+</table>
+<figure><img src="../evidence/cloudwatch/lambda_concurrency.png" style="width:80%">
+<figcaption>Figure 2: concurrent executions. Both functions scaled out by themselves (5 → 9 each), but the whole account (red) was pinned at its limit of 10 from the moment the load test started.</figcaption></figure>
+<div class="two">
+<figure><img src="../evidence/cloudwatch/lambda_invocations.png"><figcaption>Figure 3: invocations climb with each step, then flatten at ~3,000/min per function even though the rooms doubled.</figcaption></figure>
+<figure><img src="../evidence/cloudwatch/lambda_throttles.png"><figcaption>Figure 4: throttles go from 0 to over 600 a minute per function. They carry on after the test while the backlog drains.</figcaption></figure>
+</div>
+<figure><img src="../evidence/cloudwatch/lambda_async_age.png" style="width:80%">
+<figcaption>Figure 5: async event age = how long an IoT event sat in Lambda's queue before running. It climbs the whole test and peaks at ~295 s, 2 minutes <i>after</i> the test stopped.</figcaption></figure>
+<p><b>What this shows:</b></p>
+<ul>
+<li><b>Lambda scaled exactly how it's meant to, until it hit the account limit.</b> Once the account was at 10 concurrent executions, each function topped out at about 3,000 invocations a minute (~50 readings/s). At 100 rooms readings were arriving at ~100/s, so the rest got throttled and went into Lambda's retry queue. That's why the median latency went from 314 ms to 22 seconds.</li>
+<li><b>Lambda didn't lose anything.</b> CloudWatch shows 20,615 events received vs 20,547 invoked for the log function (the rest ran just after my window), and <code>AsyncEventsDropped</code> was 0 every minute. All 6,400 throttles were retried. So overloading it made it slow, not broken.</li>
+<li><b>But 6% of the load readings never got saved, and that was a second bottleneck I didn't expect.</b> 19,439 of the 20,687 load readings are in DynamoDB. At 100 rooms Node-RED's <i>one</i> MQTT connection was receiving ~100 msg/s, which is IoT Core's per-connection limit. IoT Core throttled delivery to it (<code>PublishOut.Throttle</code> = 214 at 22:05), so messages arrived late and out of order. My duplicate filter ("must be newer than the last one") then threw out 721 as "duplicate/old" and 306 as more than 60 s late, which accounts for most of the missing ones. Node-RED's CPU was fine. It was the single connection and my too-strict filter.</li>
+<li><b>Other things held up fine.</b> DynamoDB on-demand took ~12,000 write units a minute without any problem. The Lambdas actually got <i>faster</i> under load (control function ~50–70 ms → ~30–40 ms average, log function ~22 → ~15 ms) because warm containers reuse their connections.</li>
+<li><b>The load rooms hurt my real rooms (noisy neighbour).</b> The 5 normal rooms share the same limit, so their command latency went from under a second to an average of 12–43 s. After the test, the backlog delivered commands up to 186 s old, and their lights flapped 31 times a minute until it cleared at about 22:08.</li>
+</ul>
+<p><b>So is it scalable?</b> The <i>design</i> is. Going from 5 to 105 rooms needed no code or design changes: IoT Core took everything the rooms sent, Lambda scaled out automatically, and DynamoDB didn't notice. What capped it were two limits I hadn't planned for: the new account's Lambda concurrency (10) and the per-connection throughput of my single Node-RED gateway. Both are fixable with config, not a redesign (section 6), but I couldn't fully <i>prove</i> it scales past ~25–50 rooms on this account.</p>
+
+
+<h2>4. Security</h2>
+<p>Every device (and Node-RED) has its own X.509 certificate. The IoT policy uses <code>${iot:Connection.Thing.ThingName}</code>, so a device can only connect as itself, publish to its own <code>telemetry</code> topic and subscribe to its own <code>cmd</code> topic. The 100 load-test rooms got their own certs too, so the load test went through the exact same security as a real device. Each Lambda has its own IAM role with only what it needs. The log function can only <code>UpdateItem</code> on the one table. The control function can only Query/Get/Update that table and publish to <code>home/*/cmd</code>. Data is encrypted in transit (TLS to IoT Core on port 8883) and at rest (DynamoDB default encryption). I tested the policy with the lounge's certificate. Publishing to its own topic worked. Trying to publish to the kitchen's topic, connecting with the kitchen's client ID, and connecting with no certificate all got the connection killed by AWS (<code>security_test.log</code>).</p>
+
+<h2>5. What Went Wrong (and What I Learned)</h2>
+<ul>
+<li><b>Lights flickering (the plan's rule was wrong).</b> On the first full run every light switched on, saw its own glow (~350 lux), decided the room was bright, switched off, and repeated: 61 switches in about 90 seconds. Adding the second threshold (on &lt; 250, off &gt; 650 lux) fixed it, and the next run had 10 switches in about 4 minutes. Lesson: the sensor and the thing you're controlling affect each other, which I completely missed in the plan.</li>
+<li><b>Rebooted devices got blocked.</b> My first duplicate filter in Node-RED used a sequence number. That resets to 1 when a device restarts, so everything from a restarted room got rejected as a "duplicate". I switched to the device timestamp.</li>
+<li><b>The 10-concurrency limit</b> (section 3). I did spot it before the load test and flagged it in my status update. I still underestimated how fast it would bite, because I'd only thought about the <i>average</i> load and not the bursts.</li>
+<li><b>Synchronised devices = bursts.</b> All 5 rooms started at the same moment and send every 3 seconds, so their readings arrive together. Even with just 5 rooms, CloudWatch shows peaks of 10 concurrent executions (5 rooms × 2 functions at once). Real devices should add a bit of random jitter to when they send.</li>
+<li><b>Old commands after a backlog.</b> When the throttled events finally got processed (up to ~3 min late), the rooms acted on commands that were already out of date. Each room should ignore a command whose <code>basedOn</code> timestamp is more than a few seconds old, and the control function should skip readings that are already stale. I ran out of time to add and re-test that, so it's the first thing on my fix list.</li>
+</ul>
+
+<h2>6. Limitations and What I'd Do Next</h2>
+<ul>
+<li><b>Lift the concurrency limit</b> with a Service Quotas request (free) and re-run the same test. Everything in the design points to it scaling, but I can only <i>prove</i> it up to the limit.</li>
+<li><b>Put SQS between the IoT Rule and the Lambdas</b> so each invocation handles a batch of readings. Ten readings per invocation means about a tenth of the concurrency, and the queue soaks up bursts in a controlled way rather than relying on throttle-and-retry.</li>
+<li><b>Node-RED is a single point of failure</b> because it runs on my laptop. If it's down, nothing reaches the Lambdas. When I restarted it once, the lounge's history in DynamoDB has a 12-second hole (21:50:34 → 21:50:46), because those readings were simply never processed. The validation could move into the IoT Rule SQL (<code>WHERE lux &gt;= 0 AND ...</code>), or Node-RED could run as 2+ instances using MQTT shared subscriptions. It also turned out to be a throughput limit at 100 rooms (section 3). Shared subscriptions (<code>$share/nodered/home/+/telemetry</code>) would spread the readings over several connections, and the duplicate filter should remember a short window of recent timestamps instead of only the newest one.</li>
+<li><b>Dashboard security:</b> right now it uses my AWS credentials on my laptop. Properly, it would go through API Gateway with Cognito logins.</li>
+<li><b>Multiple houses:</b> the topics would become <code>home/&lt;houseId&gt;/&lt;room&gt;/...</code> and the partition key <code>houseId#roomId</code>. The policy variable trick still works, so nothing else in the design has to change.</li>
+<li><b>Real hardware:</b> an ESP32 with an LDR and PIR could replace <code>room.js</code> without touching anything above the MQTT connection, since it would use the same cert, topics and payload.</li>
+</ul>
+
+<h2>7. Conclusion</h2>
+<p>All the functional requirements from my plan work on real AWS: readings every few seconds, automatic on/off, everything saved, offline alerts, and per-device security that I actually tested. The scalability test was the most useful part, even though the result wasn't the perfect graph I was hoping for. The serverless design scaled as far as my account allowed. IoT Core took 100 msg/s from the rooms without an error, but Lambda hit the new-account limit of 10 at roughly 25–50 rooms, and my single Node-RED connection hit IoT Core's per-connection limit at 100 rooms. Past that point nothing crashed and Lambda didn't drop anything, but everything got very slow and 6% of readings were lost at the gateway. That's exactly the kind of thing you only find by load testing. If I did this again I'd request the quota increase on day one, add send jitter and stale-command checks to the devices, put a queue in front of the functions, and spread Node-RED over shared subscriptions.</p>
+
+
+<!--APPENDIX-->
+</body>
+</html>
